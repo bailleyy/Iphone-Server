@@ -1,1 +1,7 @@
 This is just a simple server for recieving Iphone Information to upload and retrieve from Redis!
+
+If I ever make a website, this will most probably be used as a little peak into my ability.
+
+This is extremely simple and a vary dumbed down quick version.
+
+-# All inspo from [britdev](https://britdev.me/) so thank you
