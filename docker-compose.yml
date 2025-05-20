@@ -1,6 +1,6 @@
 name: "Iphone-Info"
 services:
-  brampton-bot:
+  phone-server:
     image: bailleyy/iphone-server:production
     container_name: Phone-Server
     restart: always
@@ -10,6 +10,7 @@ services:
       dockerfile: Dockerfile
     environment:
       - API_KEY=${API_KEY}
+      - REDIS_URL=${REDIS_URL}
     depends_on:
       phone-redis:
         condition: service_healthy
@@ -57,7 +58,9 @@ services:
       timeout: 3s
       retries: 5
 
-    
-
 volumes:
   phone_data:
+
+networks:
+  phone_network:
+    driver: bridge

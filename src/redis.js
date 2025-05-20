@@ -2,7 +2,7 @@ const { createClient } = require("redis");
 const Color = require("cli-color");
 
 class Database {
-    constructor(Server) {        
+    constructor(Server) {
         this.Type = "redis";
         this.Server = Server
         this.connectionAttempts = 0;
@@ -10,6 +10,7 @@ class Database {
         this.retryDelay = 5000
 
         this.Redis = createClient({
+            url: process.env.REDIS_URL || null,
             socket: {
                 reconnectStrategy: (attempts) => {
                     this.connectionAttempts = attempts;
