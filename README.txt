@@ -1,0 +1,1 @@
+This is just a simple server for recieving Iphone Information to upload and retrieve from Redis!
