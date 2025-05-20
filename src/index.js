@@ -1,8 +1,10 @@
 require("dotenv").config();
 
 const express = require("express");
+const path = require("path");
 const rateLimit = require("express-rate-limit");
 const color = require("cli-color")
+const cors = require("cors");
 const redis = require("./redis");
 
 const RateLimit = rateLimit({
@@ -20,14 +22,19 @@ const Server = express();
 Server.disable("x-powered-by")
 Server.use(express.json());
 Server.use(RateLimit);
+Server.use(cors({
+    origin: "*",
+    credentials: false
+}))
 
 const RedisServer = new redis(Server);
 
 const Fields = ["volume", "brightness", "model", "battery", "version"];
 
 Server.get("/", (req, res) => {
-    res.status(200).json({ success: true, message: "OK", data: "Hello world!" })
-})
+    res.sendFile(path.join(__dirname, "client", "index.html"));
+});
+
 
 Server.post("/phone", async (req, res) => {
     if (!req.headers["x-api-key"] || req.headers["x-api-key"] !== process.env.API_KEY) {
