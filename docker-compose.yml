@@ -1,0 +1,63 @@
+name: "Iphone-Info"
+services:
+  brampton-bot:
+    image: bailleyy/iphone-server:production
+    container_name: Phone-Server
+    restart: always
+    build:
+      context: .
+      no_cache: false
+      dockerfile: Dockerfile
+    environment:
+      - API_KEY=${API_KEY}
+    depends_on:
+      phone-redis:
+        condition: service_healthy
+    ports:
+      - "150:150"
+
+  phone-redis:
+    image: redis/redis-stack-server:latest
+    container_name: Phone-Redis
+    restart: always
+    environment:
+      - REDIS_SAVE_10_1=5 1
+      - REDIS_SAVE_60_10=60 100
+      - REDIS_SAVE_300_10=300 10
+      # AOF settings
+      - REDIS_APPENDONLY=yes
+      - REDIS_APPENDFSYNC=everysec
+      - REDIS_AOF_LOAD_TRUNCATED=yes
+      # Files and directories
+      - REDIS_DIR=/data
+      - REDIS_DBFILENAME=dump.rdb
+      - REDIS_APPENDFILENAME=appendonly.aof
+      # Logging
+      - REDIS_LOGLEVEL=debug
+      # RDB settings
+      - REDIS_STOP_WRITES_ON_BGSAVE_ERROR=no
+      - REDIS_RDBCOMPRESSION=yes
+      - REDIS_RDBCHECKSUM=yes
+      # Memory management
+      - REDIS_MAXMEMORY=900mb
+      - REDIS_MAXMEMORY_POLICY=allkeys-lru
+      - REDIS_MAXMEMORY_SAMPLES=5
+      # Network
+      - REDIS_BIND=0.0.0.0
+      - REDIS_PORT=6379
+      - REDIS_PROTECTED_MODE=no
+      - REDIS_TCP_KEEPALIVE=60
+      - REDIS_TIMEOUT=0
+      - REDIS_TCP_BACKLOG=511
+    volumes:
+      - phone_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+    
+
+volumes:
+  phone_data:
