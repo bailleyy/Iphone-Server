@@ -55,6 +55,7 @@ Server.post("/phone", async (req, res) => {
         .flatMap(field => [field, req.body[field]]);
 
     await RedisServer.Redis.mSet(entriesToSet);
+    await RedisServer.Redis.set("lastUpdated", new Date().toISOString())
 
     return res.status(200).json({ success: true, message: "OK" })
 })
