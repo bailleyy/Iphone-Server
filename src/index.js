@@ -29,7 +29,7 @@ Server.use(cors({
 
 const RedisServer = new redis(Server);
 
-const Fields = ["volume", "brightness", "model", "battery", "version"];
+const Fields = ["volume", "brightness", "model", "battery", "version", "lastUpdated"];
 
 Server.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "index.html"));
